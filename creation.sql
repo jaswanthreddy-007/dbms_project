@@ -1,30 +1,36 @@
---1 show all passengers
---2 book ticket (trigger)
---3 veiw ticket
---4 flight related query
+create database test1;
+use test1;
 
+create table flight(
+flight_number int primary key,
+sourcec varchar(20),
+destination varchar (20),
+arrival_time time,
+departure_time time,
+FOREIGN KEY (airlineid) REFERENCES airline(airlineid));
 
---1 show all passengers
+create table passenger(
+passport_number varchar(20) primary key,
+Name_  varchar (20),
+age int,
+phoneno varchar (10),
+FOREIGN KEY (tickid) REFERENCES ticket(tickid));
 
-select p.passport_number,p.name,p.flight_number,f.destination
-from passenger p,flight f
-where(p.flight_number = f.flight_number);
+create table ticket(
+ticket_num int primary key,
+price int,
+seat_num int,
+FOREIGN KEY (passport_number) REFERENCES passenger(passport_number),
+FOREIGN KEY (flight_number) REFERENCES flight(flight_number)
+);
 
+create table employee(
+phone_num varchar(20) ,
+name_ varchar(20),
+emp_id varchar(10) primary key
+);
 
-
---3 veiw ticket
-
-select p.passport_number,p.name,p.sex,p.flight_number,f.source,f.destination,f.arrival_time,f.departure_time,a.airline_name
-from passenger p,flight f,airline a
-where(p.flight_number=f.flight_number and f.airline_id = a.airline_id);
-
-
---2 trigger
-
-create trigger exp_trig after insert on passenger
-for each row
-BEGIN
-select p.passport_number,p.name,p.sex,p.flight_number,f.source,f.destination,f.arrival_time,f.departure_time,a.airline_name
-from passenger p,flight f,airline a
-where(p.flight_number=f.flight_number and f.airline_id = a.airline_id);
-END
+create table airline(
+airline_name varchar(20) primary key,
+airline_id varchar(10)
+);
