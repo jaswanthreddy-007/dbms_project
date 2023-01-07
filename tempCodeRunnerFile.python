@@ -1,0 +1,13 @@
+
+import openai
+import webbrowser as wb
+openai.api_key='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'
+response = openai.Image.create(
+  prompt="a white siamese cat",
+  n=1,
+  size="1024x1024"
+)
+image_url = response['data'][0]['url']
+
+print(image_url)
+wb.open_new_tab(image_url)
