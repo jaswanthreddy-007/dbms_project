@@ -28,13 +28,13 @@ class Hospital:
         self.price = StringVar()
         self.seat_num = StringVar()
         self.flight_ID = StringVar()
-
+        self.tick_query = StringVar()
     def home_page(self):
 
-        self.root.title("Hospital Management System")
+        self.root.title("Airport Management System")
         self.root.geometry("1540x780+0+0")
 
-        lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Hospital Management System",
+        lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Airport Management System",
                          fg="purple", font=("times new roman", 50, "bold"))
         lbltitle.pack(side=TOP, fill=X)
 
@@ -59,7 +59,7 @@ class Hospital:
 
     def admin_page_2(self):
 
-        lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Hospital Admin System",
+        lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Airport Admin System",
                          fg="purple", font=("times new roman", 50, "bold"))
         lbltitle.pack(side=TOP, fill=X)
 
@@ -109,7 +109,7 @@ class Hospital:
 
     def rec_page_2(self):
 
-        lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Hospital Reception",
+        lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Airport Reception",
                          fg="purple", font=("times new roman", 50, "bold"))
         lbltitle.pack(side=TOP, fill=X)
 
@@ -153,18 +153,18 @@ class Hospital:
         Buttonframe = Frame(self.root, bd=20, relief=RIDGE, bg="cyan")
         Buttonframe.place(x=0, y=130, width=1540, height=650)
 
-        b1 = Button(Buttonframe, text="Show All",
+        b1 = Button(Buttonframe, text="Veiw All Tickets",
                     background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_showtable()])
         b1.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
 
         # Button 2
-        b2 = Button(Buttonframe, text="Add New Patient",
+        b2 = Button(Buttonframe, text="Book a Ticket",
                     background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_addnew()])
         b2.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
 
         # Button 3
-        b3 = Button(Buttonframe, text="Find",
-                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy()])
+        b3 = Button(Buttonframe, text="Find Journey",
+                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(),self.find_journey()])
         b3.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
 
         # Button 4
@@ -223,9 +223,9 @@ class Hospital:
         self.hospital_table.place(x=0, y=50, width=1485, height=540)
 
         conn = mysql.connector.connect(
-            host="localhost", username="root", password="rambo", database="fms")
+            host="localhost", username="root", password="rambo", database="fms2")
         my_cursor = conn.cursor()
-        my_cursor.execute("SELECT t.ticket_num,t.price,t.seat_num,p.*,f.* from ticket t,passenger p,flight f where(t.passport_number=p.passport_number and t.flight_number=f.flight_number)")
+        my_cursor.execute(" SELECT t.ticket_num, t.price, t.seat_num, p.*, f.* from ticket t, passenger p, flight f  where(t.passport_number=p.passport_number and t.flight_number=f.flight_number) order by t.ticket_num asc")
         rows = my_cursor.fetchall()
         if len(rows) != 0:
             self.hospital_table.delete(*self.hospital_table.get_children())
@@ -288,17 +288,17 @@ class Hospital:
             "arial", 12, "bold"), padx=2, pady=6).grid(row=6, column=5)
         txtCheckup_Date = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
                                 textvariable=self.seat_num).grid(row=6, column=6, sticky=W)
-        lblName = Label(Dataframe, text="Flight Id", font=(
-            "arial", 12, "bold"), padx=2, pady=6).grid(row=7, column=5)
-        txtCheckup_Date = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
-                                textvariable=self.flight_ID).grid(row=6, column=6, sticky=W)
+        # lblName = Label(Dataframe, text=" ", font=(
+        #     "arial", 12, "bold"), padx=2, pady=6).grid(row=7, column=5)
+        # txtCheckup_Date = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+        #                         ).grid(row=6, column=6, sticky=W)
 
-        lblName = Label(Dataframe, text=" ", font=(
+        lblName = Label(Dataframe, text="Flight id ", font=(
             "arial", 12, "bold"), padx=2, pady=6).grid(row=9, column=5)
         comGender = ttk.Combobox(Dataframe, font=(
-            "arial", 12, "bold"), width=33)
-        comGender["values"] = ("M", "F")
-        comGender.grid(row=7, column=6, sticky=W)
+            "arial", 12, "bold"), width=33, textvariable=self.flight_ID)
+        comGender["values"] = ("307", "308","309")
+        comGender.grid(row=9, column=6, sticky=W)
 
         b2 = Button(Dataframe, text="Submit",
                     background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.insert()])
@@ -316,11 +316,9 @@ class Hospital:
         else:
             messagebox.showinfo("Success", "Inserted")
             conn = mysql.connector.connect(
-                host="localhost", username="root", password="rambo", database="fms")
+                host="localhost", username="root", password="rambo", database="fms2")
             my_cursor = conn.cursor()
-            print(self.Pas_ID.get(), self.Name.get(
-            ), self.age.get(), self.number.get(), self.Tick_ID.get(), self.price.get(), self.seat_num.get(
-            ), self.Pas_ID.get(), self.flight_ID.get())
+            print( self.flight_ID.get())
             my_cursor.execute("INSERT INTO PASSENGER VALUES(%s,%s,%s,%s)", (self.Pas_ID.get(), self.Name.get(
             ), self.age.get(), self.number.get()))
             # rows = my_cursor.fetchall()
@@ -345,6 +343,113 @@ class Hospital:
             conn.commit()
             self.rec_showtable()
             conn.close()
+            
+            
+            
+    ####-----------  find journey function--------------- #######
+    
+    def find_journey(self):
+        Dataframe = Frame(self.root, bd=20, relief=RIDGE)
+        Dataframe.place(x=0, y=130, width=1540, height=650)
+
+        ############ Button Frame ###########
+
+        Buttonframe = Frame(Dataframe, bd=5, relief=RAISED, bg="brown")
+        Buttonframe.grid(row=0, column=1)
+
+        ########### Back Button #############
+
+        b1 = Button(Buttonframe, text="< Back",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_page_3()])
+        b1.pack(fill=BOTH, side=BOTTOM)
+
+        ########### Add new record form ##########
+
+        lblPatID = Label(Dataframe, text="Ticket ID", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=5, column=5)
+        txtPatID = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+                         textvariable=self.tick_query).grid(row=5, column=6, sticky=W)
+
+        
+
+        # lblName = Label(Dataframe, text="Flight id ", font=(
+        #     "arial", 12, "bold"), padx=2, pady=6).grid(row=9, column=5)
+        # comGender = ttk.Combobox(Dataframe, font=(
+        #     "arial", 12, "bold"), width=33, textvariable=self.flight_ID)
+        # comGender["values"] = ("307", "308","309")
+        # comGender.grid(row=7, column=6, sticky=W)
+
+        b2 = Button(Dataframe, text="Submit",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.find_journey_2()])
+        b2.grid(row=10, column=5, sticky=W)
+
+
+    ### --------------  find journey 2 -------()
+
+    def find_journey_2(self):
+        Dataframe = Frame(self.root, bd=20, relief=RIDGE, bg="cyan")
+        Dataframe.place(x=0, y=130, width=1540, height=650)
+
+        ############ Button Frame ###########
+
+        Buttonframe = Frame(Dataframe, bd=5, relief=RAISED, bg="brown")
+        Buttonframe.place(x=0, y=0, width=100, height=50)
+
+        ########### Back Button #############
+
+        b1 = Button(Buttonframe, text="< Back",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_page_3()])
+        b1.pack(fill=BOTH, side=BOTTOM)
+
+        ########### Scroll Bar #############
+
+        scroll_x = ttk.Scrollbar(Dataframe, orient=HORIZONTAL)
+        scroll_y = ttk.Scrollbar(Dataframe, orient=VERTICAL)
+        self.hospital_table = ttk.Treeview(Dataframe, column=("Pat_ID", "Name", "Diagnosis", "Address", "Hosp_ID",
+                                           "Doc_ID", "Checkup_Date", "Gender"), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y)
+        scroll_x.pack(side=BOTTOM, fill=X)
+        scroll_y.pack(side=RIGHT, fill=Y)
+
+        scroll_x = ttk.Scrollbar(command=self.hospital_table.xview)
+        scroll_y = ttk.Scrollbar(command=self.hospital_table.yview)
+
+        self.hospital_table.heading("Pat_ID", text="Ticket No:")
+        self.hospital_table.heading("Name", text="Price")
+        self.hospital_table.heading("Diagnosis", text="Seat number")
+        self.hospital_table.heading("Address", text="Passport Number")
+        self.hospital_table.heading("Hosp_ID", text="Name")
+        self.hospital_table.heading("Doc_ID", text="age")
+        self.hospital_table.heading("Checkup_Date", text="phone no")
+        self.hospital_table.heading("Gender", text="source")
+        self.hospital_table.heading("Gender", text="destination")
+        self.hospital_table.heading("Gender", text="arrival")
+        self.hospital_table.heading("Gender", text="departure")
+        self.hospital_table.heading("Gender", text="airline id")
+
+        
+
+
+
+        self.hospital_table["show"] = "headings"
+        self.hospital_table.place(x=0, y=50, width=1485, height=540)
+
+        conn = mysql.connector.connect(
+            host="localhost", username="root", password="rambo", database="fms2")
+        my_cursor = conn.cursor()
+        
+        sql_select_query = """select t.ticket_num, t.price, t.seat_num, p.*, f.* from ticket t, passenger p, flight f where(t.passport_number=p.passport_number and t.flight_number=f.flight_number and t.ticket_num=%s)"""
+        # set variable in query
+        
+        my_cursor.execute(sql_select_query, (self.tick_query.get(),))
+        
+        rows = my_cursor.fetchall()
+        if len(rows) != 0:
+            self.hospital_table.delete(*self.hospital_table.get_children())
+            for i in rows:
+                self.hospital_table.insert("", END, values=i)
+            conn.commit()
+        conn.close()
+        
 
     #### validates reception staff ####
 
