@@ -29,6 +29,12 @@ class Hospital:
         self.seat_num = StringVar()
         self.flight_ID = StringVar()
         self.tick_query = StringVar()
+        self.flid =StringVar()
+        self.src = StringVar()
+        self.dest = StringVar()
+        self.at = StringVar()
+        self.dt = StringVar()
+        self.aid = StringVar()
     def home_page(self):
 
         self.root.title("Airport Management System")
@@ -98,7 +104,87 @@ class Hospital:
 
     def admin_page_3(self):
 
+        Buttonframe = Frame(self.root, bd=20, relief=RIDGE, bg="cyan")
+        Buttonframe.place(x=0, y=130, width=1540, height=650)
+
+        b1 = Button(Buttonframe, text="Add Flight",
+                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.Add_Flight()])
+        b1.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
+        # Button 2
+        b2 = Button(Buttonframe, text="Book a Ticket",
+                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_addnew()])
+        b2.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
+
+        # Button 3
+        b3 = Button(Buttonframe, text="Find Journey",
+                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(),self.find_journey()])
+        b3.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
+
+        # Button 4
+        b4 = Button(Buttonframe, text="Log Out",
+                    background="green", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.home_page()])
+        b4.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
+
+###----------------Add flight----------------########
+
+    def Add_Flight(self):
+
         ########### Data Frame #############
+
+        Dataframe = Frame(self.root, bd=20, relief=RIDGE)
+        Dataframe.place(x=0, y=130, width=1540, height=650)
+
+        ############ Button Frame ###########
+
+        Buttonframe = Frame(Dataframe, bd=5, relief=RAISED, bg="brown")
+        Buttonframe.grid(row=0, column=1)
+
+        ########### Back Button #############
+
+        b1 = Button(Buttonframe, text="< Back",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_page_3()])
+        b1.pack(fill=BOTH, side=BOTTOM)
+
+        ########### Add new record form ##########
+
+        lblPatID = Label(Dataframe, text="Flight ID", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=0, column=5)
+        txtPatID = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+                         textvariable=self.flid).grid(row=0, column=6, sticky=W)
+
+        lblName = Label(Dataframe, text="Source", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=1, column=5)
+        txtName = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+                        textvariable=self.src).grid(row=1, column=6, sticky=W)
+
+        lblName = Label(Dataframe, text="Destination", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=2, column=5)
+        txtDiagnosis = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+                             textvariable=self.dest).grid(row=2, column=6, sticky=W)
+        
+        lblName = Label(Dataframe, text="Arrival Time", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=3, column=5)
+        txtDiagnosis = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+                             textvariable=self.at).grid(row=3, column=6, sticky=W)
+        
+        lblName = Label(Dataframe, text="Departure Time", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=4, column=5)
+        txtDiagnosis = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
+                             textvariable=self.dt).grid(row=4, column=6, sticky=W)
+        
+
+        lblName = Label(Dataframe, text="Airline id ", font=(
+            "arial", 12, "bold"), padx=2, pady=6).grid(row=9, column=5)
+        comGender = ttk.Combobox(Dataframe, font=(
+            "arial", 12, "bold"), width=33, textvariable=self.aid)
+        comGender["values"] = ("107", "108", "109","110")
+        comGender.grid(row=9, column=6, sticky=W)
+
+        b2 = Button(Dataframe, text="Submit",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.flight_ticket_2()])
+        b2.grid(row=10, column=5, sticky=W)
+        
+    def flight_ticket_2(self):
         Dataframe = Frame(self.root, bd=20, relief=RIDGE, bg="cyan")
         Dataframe.place(x=0, y=130, width=1540, height=650)
 
@@ -107,6 +193,65 @@ class Hospital:
         Buttonframe = Frame(Dataframe, bd=5, relief=RAISED, bg="brown")
         Buttonframe.place(x=0, y=0, width=100, height=50)
 
+        ########### Back Button #############
+
+        b1 = Button(Buttonframe, text="< Back",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_page_3()])
+        b1.pack(fill=BOTH, side=BOTTOM)
+
+        ########### Scroll Bar #############
+
+        scroll_x = ttk.Scrollbar(Dataframe, orient=HORIZONTAL)
+        scroll_y = ttk.Scrollbar(Dataframe, orient=VERTICAL)
+        self.hospital_table = ttk.Treeview(Dataframe, column=("Flight_Id", "Source", "Destination", "Arrival", "Departure",
+                                           "AID"), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y)
+        scroll_x.pack(side=BOTTOM, fill=X)
+        scroll_y.pack(side=RIGHT, fill=Y)
+
+        scroll_x = ttk.Scrollbar(command=self.hospital_table.xview)
+        scroll_y = ttk.Scrollbar(command=self.hospital_table.yview)
+
+        self.hospital_table.heading("Flight_Id", text="Flight_Id")
+        self.hospital_table.heading("Source", text="Flight Id")
+        self.hospital_table.heading("Destination", text="Destination")
+        self.hospital_table.heading("Arrival", text="Arrival")
+        self.hospital_table.heading("Departure", text="Departure")
+        self.hospital_table.heading("AID", text="AID")
+        
+
+        
+
+
+
+        self.hospital_table["show"] = "headings"
+        self.hospital_table.place(x=0, y=50, width=1485, height=540)
+
+        conn = mysql.connector.connect(
+            host="localhost", username="root", password="rambo", database="fms2")
+        my_cursor = conn.cursor()
+        
+        sql_select_query_2 = """select * from flight"""
+        # set variable in query
+        
+        my_cursor.execute("INSERT INTO FLIGHT VALUES(%s,%s,%s,%s,%s,%s)", (self.flid.get(
+        ), self.src.get(), self.dest.get(), self.at.get(), self.dt.get(), self.aid.get()))
+        conn.commit()
+        conn.close()
+        conn = mysql.connector.connect(
+            host="localhost", username="root", password="rambo", database="fms2")
+        my_cursor = conn.cursor()
+
+        my_cursor.execute("select * from flight")
+        rows = my_cursor.fetchall()
+
+        if len(rows) != 0:
+            self.hospital_table.delete(*self.hospital_table.get_children())
+            for i in rows:
+                self.hospital_table.insert("", END, values=i)
+        conn.commit()
+        self.rec_showtable()
+        conn.close()
+        
     def rec_page_2(self):
 
         lbltitle = Label(self.root, bd=20, relief=RIDGE, text="Airport Reception",
