@@ -1,3 +1,4 @@
+import os
 from tkinter import *
 from tkinter import ttk
 import random
@@ -5,6 +6,8 @@ import time
 import datetime
 from tkinter import messagebox
 import mysql.connector
+from dotenv import load_dotenv  
+load_dotenv()  
 
 
 def fun(args):
@@ -13,7 +16,7 @@ def fun(args):
 # main window frame with title
 
 
-class Hospital:
+class airport:
 
     def __init__(self, root):
 
@@ -111,19 +114,12 @@ class Hospital:
                     background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.Add_Flight()])
         b1.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
         # Button 2
-        b2 = Button(Buttonframe, text="Book a Ticket",
-                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_addnew()])
-        b2.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
-
-        # Button 3
-        b3 = Button(Buttonframe, text="Find Journey",
-                    background="red", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(),self.find_journey()])
-        b3.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
+      
 
         # Button 4
-        b4 = Button(Buttonframe, text="Log Out",
+        b2 = Button(Buttonframe, text="Log Out",
                     background="green", fg="white", font=("times new roman", 50, "bold"), command=lambda: [Buttonframe.destroy(), self.home_page()])
-        b4.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
+        b2.pack(side=TOP, expand=True, fill=BOTH, pady=5, padx=5)
 
 ###----------------Add flight----------------########
 
@@ -142,7 +138,7 @@ class Hospital:
         ########### Back Button #############
 
         b1 = Button(Buttonframe, text="< Back",
-                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_page_3()])
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.admin_page_3()])
         b1.pack(fill=BOTH, side=BOTTOM)
 
         ########### Add new record form ##########
@@ -196,35 +192,35 @@ class Hospital:
         ########### Back Button #############
 
         b1 = Button(Buttonframe, text="< Back",
-                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.rec_page_3()])
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.admin_page_3()])
         b1.pack(fill=BOTH, side=BOTTOM)
 
         ########### Scroll Bar #############
 
         scroll_x = ttk.Scrollbar(Dataframe, orient=HORIZONTAL)
         scroll_y = ttk.Scrollbar(Dataframe, orient=VERTICAL)
-        self.hospital_table = ttk.Treeview(Dataframe, column=("Flight_Id", "Source", "Destination", "Arrival", "Departure",
+        self.ticket_table = ttk.Treeview(Dataframe, column=("Flight_Id", "Source", "Destination", "Arrival", "Departure",
                                            "AID"), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y)
         scroll_x.pack(side=BOTTOM, fill=X)
         scroll_y.pack(side=RIGHT, fill=Y)
 
-        scroll_x = ttk.Scrollbar(command=self.hospital_table.xview)
-        scroll_y = ttk.Scrollbar(command=self.hospital_table.yview)
+        scroll_x = ttk.Scrollbar(command=self.ticket_table.xview)
+        scroll_y = ttk.Scrollbar(command=self.ticket_table.yview)
 
-        self.hospital_table.heading("Flight_Id", text="Flight_Id")
-        self.hospital_table.heading("Source", text="Flight Id")
-        self.hospital_table.heading("Destination", text="Destination")
-        self.hospital_table.heading("Arrival", text="Arrival")
-        self.hospital_table.heading("Departure", text="Departure")
-        self.hospital_table.heading("AID", text="AID")
+        self.ticket_table.heading("Flight_Id", text="Flight_Id")
+        self.ticket_table.heading("Source", text="Flight Id")
+        self.ticket_table.heading("Destination", text="Destination")
+        self.ticket_table.heading("Arrival", text="Arrival")
+        self.ticket_table.heading("Departure", text="Departure")
+        self.ticket_table.heading("AID", text="AID")
         
 
         
 
 
 
-        self.hospital_table["show"] = "headings"
-        self.hospital_table.place(x=0, y=50, width=1485, height=540)
+        self.ticket_table["show"] = "headings"
+        self.ticket_table.place(x=0, y=50, width=1485, height=540)
 
         conn = mysql.connector.connect(
             host="localhost", username="root", password="rambo", database="fms2")
@@ -241,15 +237,64 @@ class Hospital:
             host="localhost", username="root", password="rambo", database="fms2")
         my_cursor = conn.cursor()
 
+        # my_cursor.execute("select * from flight")
+        # rows = my_cursor.fetchall()
+
+        # if len(rows) != 0:
+        #     self.ticket_table.delete(*self.ticket_table.get_children())
+        #     for i in rows:
+        #         self.ticket_table.insert("", END, values=i)
+        conn.commit()
+        self.rec_showtable_2()
+        conn.close()
+        
+    def rec_showtable_2(self):
+        Dataframe = Frame(self.root, bd=20, relief=RIDGE, bg="cyan")
+        Dataframe.place(x=0, y=130, width=1540, height=650)
+
+        ############ Button Frame ###########
+
+        Buttonframe = Frame(Dataframe, bd=5, relief=RAISED, bg="brown")
+        Buttonframe.place(x=0, y=0, width=100, height=50)
+
+        ########### Back Button #############
+
+        b1 = Button(Buttonframe, text="< Back",
+                    background="red", fg="white", font=("times new roman", 10, "bold"), command=lambda: [Buttonframe.destroy(), self.admin_page_3()])
+        b1.pack(fill=BOTH, side=BOTTOM)
+
+        ########### Scroll Bar #############
+
+        scroll_x = ttk.Scrollbar(Dataframe, orient=HORIZONTAL)
+        scroll_y = ttk.Scrollbar(Dataframe, orient=VERTICAL)
+        self.flight_table = ttk.Treeview(Dataframe, column=("Flight_Id", "Source", "Destination", "Arrival", "Departure",
+                                           "AID"), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y)
+        scroll_x.pack(side=BOTTOM, fill=X)
+        scroll_y.pack(side=RIGHT, fill=Y)
+
+        scroll_x = ttk.Scrollbar(command=self.flight_table.xview)
+        scroll_y = ttk.Scrollbar(command=self.flight_table.yview)
+
+        self.flight_table.heading("Flight_Id", text="Flight_Id")
+        self.flight_table.heading("Source", text="Flight Id")
+        self.flight_table.heading("Destination", text="Destination")
+        self.flight_table.heading("Arrival", text="Arrival")
+        self.flight_table.heading("Departure", text="Departure")
+        self.flight_table.heading("AID", text="AID")
+
+        self.flight_table["show"] = "headings"
+        self.flight_table.place(x=0, y=50, width=1485, height=540)
+
+        conn = mysql.connector.connect(
+            host="localhost", username="root", password="rambo", database="fms2")
+        my_cursor = conn.cursor()
         my_cursor.execute("select * from flight")
         rows = my_cursor.fetchall()
-
         if len(rows) != 0:
-            self.hospital_table.delete(*self.hospital_table.get_children())
+            self.flight_table.delete(*self.flight_table.get_children())
             for i in rows:
-                self.hospital_table.insert("", END, values=i)
-        conn.commit()
-        self.rec_showtable()
+                self.flight_table.insert("", END, values=i)
+            conn.commit()
         conn.close()
         
     def rec_page_2(self):
@@ -339,33 +384,33 @@ class Hospital:
 
         scroll_x = ttk.Scrollbar(Dataframe, orient=HORIZONTAL)
         scroll_y = ttk.Scrollbar(Dataframe, orient=VERTICAL)
-        self.hospital_table = ttk.Treeview(Dataframe, column=("Pat_ID", "Name", "Diagnosis", "Address", "Hosp_ID",
+        self.ticket_table = ttk.Treeview(Dataframe, column=("Pat_ID", "Name", "Diagnosis", "Address", "Hosp_ID",
                                            "Doc_ID", "Checkup_Date", "Gender"), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y)
         scroll_x.pack(side=BOTTOM, fill=X)
         scroll_y.pack(side=RIGHT, fill=Y)
 
-        scroll_x = ttk.Scrollbar(command=self.hospital_table.xview)
-        scroll_y = ttk.Scrollbar(command=self.hospital_table.yview)
+        scroll_x = ttk.Scrollbar(command=self.ticket_table.xview)
+        scroll_y = ttk.Scrollbar(command=self.ticket_table.yview)
 
-        self.hospital_table.heading("Pat_ID", text="Ticket No:")
-        self.hospital_table.heading("Name", text="Price")
-        self.hospital_table.heading("Diagnosis", text="Seat number")
-        self.hospital_table.heading("Address", text="Passport Number")
-        self.hospital_table.heading("Hosp_ID", text="Name")
-        self.hospital_table.heading("Doc_ID", text="age")
-        self.hospital_table.heading("Checkup_Date", text="phone no")
-        self.hospital_table.heading("Gender", text="source")
-        self.hospital_table.heading("Gender", text="destination")
-        self.hospital_table.heading("Gender", text="arrival")
-        self.hospital_table.heading("Gender", text="departure")
-        self.hospital_table.heading("Gender", text="airline id")
+        self.ticket_table.heading("Pat_ID", text="Ticket No:")
+        self.ticket_table.heading("Name", text="Price")
+        self.ticket_table.heading("Diagnosis", text="Seat number")
+        self.ticket_table.heading("Address", text="Passport Number")
+        self.ticket_table.heading("Hosp_ID", text="Name")
+        self.ticket_table.heading("Doc_ID", text="age")
+        self.ticket_table.heading("Checkup_Date", text="phone no")
+        self.ticket_table.heading("Gender", text="source")
+        self.ticket_table.heading("Gender", text="destination")
+        self.ticket_table.heading("Gender", text="arrival")
+        self.ticket_table.heading("Gender", text="departure")
+        self.ticket_table.heading("Gender", text="airline id")
 
         
 
 
 
-        self.hospital_table["show"] = "headings"
-        self.hospital_table.place(x=0, y=50, width=1485, height=540)
+        self.ticket_table["show"] = "headings"
+        self.ticket_table.place(x=0, y=50, width=1485, height=540)
 
         conn = mysql.connector.connect(
             host="localhost", username="root", password="rambo", database="fms2")
@@ -373,9 +418,9 @@ class Hospital:
         my_cursor.execute(" SELECT t.ticket_num, t.price, t.seat_num, p.*, f.* from ticket t, passenger p, flight f  where(t.passport_number=p.passport_number and t.flight_number=f.flight_number) order by t.ticket_num asc")
         rows = my_cursor.fetchall()
         if len(rows) != 0:
-            self.hospital_table.delete(*self.hospital_table.get_children())
+            self.ticket_table.delete(*self.ticket_table.get_children())
             for i in rows:
-                self.hospital_table.insert("", END, values=i)
+                self.ticket_table.insert("", END, values=i)
             conn.commit()
         conn.close()
 
@@ -459,37 +504,42 @@ class Hospital:
         if a==1:
             print("jsgvh")
         else:
+            print(self.Tick_ID.get(), self.price.get(), self.seat_num.get(
+            ), self.Pas_ID.get(), self.flight_ID.get())
             messagebox.showinfo("Success", "Inserted")
             conn = mysql.connector.connect(
                 host="localhost", username="root", password="rambo", database="fms2")
             my_cursor = conn.cursor()
-            print( self.flight_ID.get())
+            # print( self.flight_ID.get())
             my_cursor.execute("INSERT INTO PASSENGER VALUES(%s,%s,%s,%s)", (self.Pas_ID.get(), self.Name.get(
             ), self.age.get(), self.number.get()))
             # rows = my_cursor.fetchall()
             
             
             # if len(rows) != 0:
-            #     self.hospital_table.delete(*self.hospital_table.get_children())
+            #     self.ticket_table.delete(*self.ticket_table.get_children())
             #     for i in rows:
-            #         self.hospital_table.insert("", END, values=i)
+            #         self.ticket_table.insert("", END, values=i)
             # conn.commit()
             # self.rec_showtable()
             # conn.close()
-
+            
+            rows = my_cursor.fetchall()
             my_cursor.execute("INSERT INTO TICKET VALUES(%s,%s,%s,%s,%s)", (self.Tick_ID.get(), self.price.get(), self.seat_num.get(
             ), self.Pas_ID.get(), self.flight_ID.get()))
-            rows = my_cursor.fetchall()
+            
 
             if len(rows) != 0:
-                self.hospital_table.delete(*self.hospital_table.get_children())
+                self.ticket_table.delete(*self.ticket_table.get_children())
                 for i in rows:
-                    self.hospital_table.insert("", END, values=i)
+                    self.ticket_table.insert("", END, values=i)
             conn.commit()
             self.rec_showtable()
             conn.close()
-            
-            
+        
+        
+        
+        
             
     ####-----------  find journey function--------------- #######
     
@@ -550,33 +600,33 @@ class Hospital:
 
         scroll_x = ttk.Scrollbar(Dataframe, orient=HORIZONTAL)
         scroll_y = ttk.Scrollbar(Dataframe, orient=VERTICAL)
-        self.hospital_table = ttk.Treeview(Dataframe, column=("Pat_ID", "Name", "Diagnosis", "Address", "Hosp_ID",
+        self.ticket_table = ttk.Treeview(Dataframe, column=("Pat_ID", "Name", "Diagnosis", "Address", "Hosp_ID",
                                            "Doc_ID", "Checkup_Date", "Gender"), xscrollcommand=scroll_x.set, yscrollcommand=scroll_y)
         scroll_x.pack(side=BOTTOM, fill=X)
         scroll_y.pack(side=RIGHT, fill=Y)
 
-        scroll_x = ttk.Scrollbar(command=self.hospital_table.xview)
-        scroll_y = ttk.Scrollbar(command=self.hospital_table.yview)
+        scroll_x = ttk.Scrollbar(command=self.ticket_table.xview)
+        scroll_y = ttk.Scrollbar(command=self.ticket_table.yview)
 
-        self.hospital_table.heading("Pat_ID", text="Ticket No:")
-        self.hospital_table.heading("Name", text="Price")
-        self.hospital_table.heading("Diagnosis", text="Seat number")
-        self.hospital_table.heading("Address", text="Passport Number")
-        self.hospital_table.heading("Hosp_ID", text="Name")
-        self.hospital_table.heading("Doc_ID", text="age")
-        self.hospital_table.heading("Checkup_Date", text="phone no")
-        self.hospital_table.heading("Gender", text="source")
-        self.hospital_table.heading("Gender", text="destination")
-        self.hospital_table.heading("Gender", text="arrival")
-        self.hospital_table.heading("Gender", text="departure")
-        self.hospital_table.heading("Gender", text="airline id")
+        self.ticket_table.heading("Pat_ID", text="Ticket No:")
+        self.ticket_table.heading("Name", text="Price")
+        self.ticket_table.heading("Diagnosis", text="Seat number")
+        self.ticket_table.heading("Address", text="Passport Number")
+        self.ticket_table.heading("Hosp_ID", text="Name")
+        self.ticket_table.heading("Doc_ID", text="age")
+        self.ticket_table.heading("Checkup_Date", text="phone no")
+        self.ticket_table.heading("Gender", text="source")
+        self.ticket_table.heading("Gender", text="destination")
+        self.ticket_table.heading("Gender", text="arrival")
+        self.ticket_table.heading("Gender", text="departure")
+        self.ticket_table.heading("Gender", text="airline id")
 
         
 
 
 
-        self.hospital_table["show"] = "headings"
-        self.hospital_table.place(x=0, y=50, width=1485, height=540)
+        self.ticket_table["show"] = "headings"
+        self.ticket_table.place(x=0, y=50, width=1485, height=540)
 
         conn = mysql.connector.connect(
             host="localhost", username="root", password="rambo", database="fms2")
@@ -589,9 +639,9 @@ class Hospital:
         
         rows = my_cursor.fetchall()
         if len(rows) != 0:
-            self.hospital_table.delete(*self.hospital_table.get_children())
+            self.ticket_table.delete(*self.ticket_table.get_children())
             for i in rows:
-                self.hospital_table.insert("", END, values=i)
+                self.ticket_table.insert("", END, values=i)
             conn.commit()
         conn.close()
         
@@ -613,7 +663,7 @@ class Hospital:
 
     def validateLogin(self, username, password):
 
-        if username.get() == "ps" and password.get() == "6":
+        if username.get() == "js" and password.get() == "1":
             messagebox.showinfo(
                 "Success !", "Admin has been authenticated successfully")
             self.admin_page_3()
@@ -627,7 +677,7 @@ class Hospital:
 
 def main():
     root = Tk()
-    ob = Hospital(root)
+    ob = airport(root)
     ob.home_page()
     root.mainloop()
 
