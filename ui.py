@@ -650,7 +650,7 @@ class airport:
 
     def validateLogin2(self, username, password):
 
-        if username.get() == "staff" and password.get() == "s":
+        if username.get() == os.getenv("ST_ID") and password.get() == os.getenv("ST_PS"):
             messagebox.showinfo("Success !", "Welcome " + username.get())
             self.rec_page_3()
 
@@ -663,7 +663,7 @@ class airport:
 
     def validateLogin(self, username, password):
 
-        if username.get() == "js" and password.get() == "1":
+        if username.get() == os.getenv("AD_ID") and password.get() == os.getenv("AD_PS"):
             messagebox.showinfo(
                 "Success !", "Admin has been authenticated successfully")
             self.admin_page_3()

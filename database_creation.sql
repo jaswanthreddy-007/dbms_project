@@ -79,7 +79,7 @@ WHERE
     
     
     
-    select * from flight;
+    select * from ticket;
 
 select t.ticket_num,t.price,t.seat_num,p.*,f.*
 from ticket t,passenger p,flight f
