@@ -7,6 +7,9 @@ import datetime
 from tkinter import messagebox
 import mysql.connector
 from dotenv import load_dotenv  
+
+# king poseidon was here 🔱
+
 load_dotenv()  
 
 
@@ -459,6 +462,9 @@ class airport:
         txtDiagnosis = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
                              textvariable=self.age).grid(row=2, column=6, sticky=W)
 
+        
+        # ho ho ho nigahaa !!!
+        
         lblName = Label(Dataframe, text="Mobile Num", font=(
             "arial", 12, "bold"), padx=2, pady=6).grid(row=3, column=5)
         txtAddress = Entry(Dataframe, font=("arial", 12, "bold"), width=33,
